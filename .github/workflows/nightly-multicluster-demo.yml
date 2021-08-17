@@ -9,7 +9,7 @@ env:
   CTR_TAG: latest-main
 
 jobs:
-  multicluster:
+  test:
     name: Test OSM Multicluster Scenario
     runs-on: ubuntu-latest
     needs: [build]
