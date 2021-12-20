@@ -257,7 +257,22 @@ func (wh *mutatingWebhook) mutate(req *admissionv1.AdmissionRequest, proxyUUID u
 		return resp
 	}
 
-	patchBytes, err := wh.createPatch(&pod, req, proxyUUID)
+	var patchBytes []byte
+	var err error
+	if sidecarType, err := wh.getSidecarType(req.Namespace); err != nil {
+		log.Error().Err(err).Msgf("Error getting sidecar type for namespace %s", req.Namespace)
+		return webhook.AdmissionError(err)
+	} else {
+		switch sidecarType {
+		case "", constants.SidecarTypeEnvoy:
+			patchBytes, err = wh.createPatchEnvoy(&pod, req, proxyUUID)
+		case constants.SidecarTypeProxyless:
+			patchBytes, err = wh.createPatchProxyless(&pod, req, proxyUUID)
+		default:
+			log.Error().Err(err).Msgf("Error injecting sidecar, invalid sidecar type %s for namespace %s", sidecarType, req.Namespace)
+			return resp
+		}
+	}
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to create patch for pod with UUID %s in namespace %s", proxyUUID, req.Namespace)
 		return webhook.AdmissionError(err)
@@ -265,7 +280,19 @@ func (wh *mutatingWebhook) mutate(req *admissionv1.AdmissionRequest, proxyUUID u
 
 	patchAdmissionResponse(resp, patchBytes)
 	log.Trace().Msgf("Done creating patch admission response for pod with UUID %s in namespace %s", proxyUUID, req.Namespace)
+
 	return resp
+}
+
+func (wh *mutatingWebhook) getSidecarType(namespace string) (string, error) {
+	ns := wh.kubeController.GetNamespace(namespace)
+	if ns == nil {
+		log.Error().Err(errNamespaceNotFound).Msgf("Error retrieving namespace %s", namespace)
+		return "", errNamespaceNotFound
+	}
+
+	sidecarType, _ := ns.Annotations[constants.SidecarTypeAnnotation]
+	return sidecarType, nil
 }
 
 func (wh *mutatingWebhook) isNamespaceInjectable(namespace string) bool {

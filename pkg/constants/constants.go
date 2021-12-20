@@ -128,7 +128,10 @@ const (
 	KubernetesOpaqueSecretCAExpiration = "expiration"
 
 	// EnvoyUniqueIDLabelName is the label applied to pods with the unique ID of the Envoy sidecar.
-	EnvoyUniqueIDLabelName = "osm-proxy-uuid"
+	EnvoyUniqueIDLabelName = "osm-envoy-proxy-uuid"
+
+	// GRPCUniqueIDLabelName is the label applied to pods with the unique ID of the gRPC sidecar.
+	GRPCUniqueIDLabelName = "osm-grpc-proxy-uuid"
 
 	// TimeDateLayout is the layout for time.Parse used in this repo
 	TimeDateLayout = "2006-01-02T15:04:05.000Z"
@@ -153,6 +156,12 @@ const (
 	// EnvoyContainerName is the name used to identify the envoy sidecar container added on mesh-enabled deployments
 	EnvoyContainerName = "envoy"
 
+	// GrpcClientContainerName is the name used to identify the gRPC xDS client sidecar container added on mesh-enabled deployments
+	GrpcClientContainerName = "grpc-xds-client"
+
+	// GrpcClientImage is the name used to identify the gRPC xDS client sidecar container added on mesh-enabled deployments
+	GrpcClientImage = "allenlsy/grpc-xds-client"
+
 	// InitContainerName is the name of the init container
 	InitContainerName = "osm-init"
 
@@ -171,6 +180,9 @@ const (
 
 	// MetricsAnnotation is the annotation used for enabling/disabling metrics
 	MetricsAnnotation = "openservicemesh.io/metrics"
+
+	// SidecarTypeAnnotation is the annotation used for defining injected sidecar type
+	SidecarTypeAnnotation = "openservicemesh.io/sidecar-type"
 )
 
 // Labels used by the control plane
@@ -241,4 +253,12 @@ const (
 
 	// multicluster field value for context field.
 	LogContextMulticluster = "multicluster"
+)
+
+const (
+	// Envoy sidecar type
+	SidecarTypeEnvoy = "envoy"
+
+	// Go gRPC library sidecar type
+	SidecarTypeProxyless = "proxyless"
 )

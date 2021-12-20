@@ -1,0 +1,14 @@
+{
+    "xds_servers": [{
+        "server_uri": "osm-controller.osm-system.svc.cluster.local:15128",
+        "channel_creds": [{
+            "type": "insecure"
+        }],
+
+    }],
+    "node": {
+        "id": "test-node",
+        "cluster": "test-cluster",
+        "build_version": 4
+    }
+}

@@ -2,7 +2,6 @@ package injector
 
 import (
 	"context"
-	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -105,7 +104,7 @@ func (wh *mutatingWebhook) createEnvoyBootstrapConfig(name, namespace, osmNamesp
 		Cert:     cert.GetCertificateChain(),
 		Key:      cert.GetPrivateKey(),
 
-		XDSHost: fmt.Sprintf("%s.%s.svc.cluster.local", constants.OSMControllerName, osmNamespace),
+		XDSHost: getOSMControllerFQDN(osmNamespace),
 		XDSPort: constants.ADSServerPort,
 
 		// OriginalHealthProbes stores the path and port for liveness, readiness, and startup health probes as initially

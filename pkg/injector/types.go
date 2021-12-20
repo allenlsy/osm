@@ -14,6 +14,8 @@ import (
 
 const (
 	envoyBootstrapConfigVolume = "envoy-bootstrap-config-volume"
+	grpcBootstrapConfigVolume  = "grpc-bootstrap-config-volume"
+	grpcBootstrapSecretsVolume = "grpc-bootstrap-secrets-volume"
 )
 
 var log = logger.New("sidecar-injector")

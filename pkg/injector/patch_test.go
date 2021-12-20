@@ -164,7 +164,7 @@ func TestCreatePatch(t *testing.T) {
 				Object:    runtime.RawExtension{Raw: raw},
 				DryRun:    &tc.dryRun,
 			}
-			rawPatches, err := wh.createPatch(&pod, req, proxyUUID)
+			rawPatches, err := wh.createPatchEnvoy(&pod, req, proxyUUID)
 
 			assert.NoError(err)
 
@@ -202,7 +202,7 @@ func TestCreatePatch(t *testing.T) {
 			Namespace: "not-" + namespace,
 			Object:    runtime.RawExtension{Raw: raw},
 		}
-		_, err = wh.createPatch(&pod, req, proxyUUID)
+		_, err = wh.createPatchEnvoy(&pod, req, proxyUUID)
 		assert.Error(err)
 	})
 }
